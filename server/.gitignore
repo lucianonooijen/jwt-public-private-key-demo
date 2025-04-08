@@ -13,7 +13,6 @@ vendor/
 # Temporary files and binaries
 tmp/
 /server
-/capsa
 builds/
 
 # Coverage and testing output

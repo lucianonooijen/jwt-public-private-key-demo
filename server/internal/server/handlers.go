@@ -22,7 +22,7 @@ func (h *handlers) Jwk(c *gin.Context) {
 	if err != nil {
 		log.Printf("error getting public key information: %s\n", err)
 
-		c.JSON(http.StatusInternalServerError, struct{ error string }{error: "cannot get public key info"}) // You'll want to replace this logic with your own error body
+		c.JSON(http.StatusInternalServerError, struct{ Error string }{Error: "cannot get public key info"}) // You'll want to replace this logic with your own error body
 
 		return
 	}
@@ -40,12 +40,18 @@ func (h *handlers) Jwk(c *gin.Context) {
 func (h *handlers) GetJwt(c *gin.Context) {
 	jwt, err := h.token.GenerateJwt("42", "1337", "John Doe", "Example")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, struct{ error string }{error: err.Error()}) // You don't want to return the raw error in prod
+		c.JSON(http.StatusInternalServerError, struct{ Error string }{Error: err.Error()}) // You don't want to return the raw error in prod
+		return
+	}
 
+	claims, err := h.token.ValidateJwt(jwt)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, struct{ Error string }{Error: err.Error()}) // You don't want to return the raw error in prod
 		return
 	}
 
 	c.JSON(http.StatusOK, struct {
-		Token string `json:"token"`
-	}{Token: jwt}) // You should do this properly
+		Token  string `json:"token"`
+		Expiry int64  `json:"expiry"`
+	}{Token: jwt, Expiry: claims.Expiry}) // You should do this properly
 }

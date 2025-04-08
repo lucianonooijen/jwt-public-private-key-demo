@@ -21,6 +21,7 @@ func New(tok *token.Token) *Server {
 	gin.SetMode(gin.DebugMode)
 
 	router := gin.New()
+	registerMiddleware(router)
 
 	h := newHandlers(tok)
 
