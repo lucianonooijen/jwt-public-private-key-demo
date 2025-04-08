@@ -1,0 +1,24 @@
+# Configuration files
+.env
+config.yml
+config.*.yml
+!config.example.yml
+*.key
+*.pub
+
+# Dependecies
+vendor/
+.gocache/
+
+# Temporary files and binaries
+tmp/
+/server
+/capsa
+builds/
+
+# Coverage and testing output
+cobertura.xml
+coverage.txt
+coverage_raw.txt
+junit.xml
+bench.txt
