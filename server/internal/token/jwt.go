@@ -33,7 +33,7 @@ var (
 // GenerateJwt generates a JWT. What's in the name.
 func (t *Token) GenerateJwt(subject, jwtId, name, role string) (string, error) {
 	now := time.Now()
-	expiryHours := time.Duration(40) * time.Hour
+	expiryHours := time.Duration(48) * time.Hour
 
 	claims := JwtClaims{
 		Issuer:    Issuer,

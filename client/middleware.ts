@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/", req.url));
     }
 
-    // Sent users that are not logged requesting non-auth pages in to the login page
+    // Send users that are not logged requesting non-auth pages in to the login page
     if (!isAuthenticated && !isAuthRoute) {
         await deleteJwtCookie(req);
 

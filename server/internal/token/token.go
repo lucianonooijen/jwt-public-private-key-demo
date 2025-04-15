@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"errors"
 	"fmt"
+
 	"github.com/go-jose/go-jose/v4"
 )
 
@@ -39,7 +40,8 @@ func New(pk *rsa.PrivateKey) (*Token, error) {
 
 	signerOptions := (&jose.SignerOptions{}).
 		WithHeader("alg", algorithm).
-		WithHeader("jku", generateWellKnownEndpoint())
+		WithHeader("typ", "JWT").
+		WithHeader("jku", "http://localhost:4000/.well-known/jwks.json") // Change this to have correct logic, probably a method that uses the config to figure out the right value
 
 	jwtSigner, err := jose.NewSigner(jose.SigningKey{
 		Algorithm: algorithm,
@@ -62,8 +64,4 @@ func New(pk *rsa.PrivateKey) (*Token, error) {
 // GetPublicKey takes the public part of the private key and marshals this to JSON for the .well-known/jwks.json endpoint.
 func (t *Token) GetPublicKey() ([]byte, error) {
 	return t.jwk.Public().MarshalJSON()
-}
-
-func generateWellKnownEndpoint() string {
-	return "http://localhost:4000/.well-known/jwks.json" // Change this to have correct logic
 }
