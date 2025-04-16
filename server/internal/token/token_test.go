@@ -1,4 +1,4 @@
-package token_test
+package token
 
 import (
 	"crypto/rand"
@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lucianonooijen/jwt-public-private-key-demo/server/internal/token"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,12 +21,12 @@ func generateRsaKeyset(t *testing.T) *rsa.PrivateKey {
 	return privateKey
 }
 
-func getTestTokenInstance(t *testing.T) *token.Token {
+func getTestTokenInstance(t *testing.T) *Token {
 	t.Helper()
 
 	k := generateRsaKeyset(t)
 
-	tok, err := token.New(k)
+	tok, err := New(k)
 
 	require.NoError(t, err)
 
@@ -105,7 +104,7 @@ func TestJwt_ExpiredKey(t *testing.T) {
 	oneMonthAgo := now.AddDate(0, -1, 0)
 	twoMonthAgo := now.AddDate(0, -2, 0)
 
-	claims := token.JwtClaims{
+	claims := JwtClaims{
 		Issuer:    "tests",
 		Subject:   "testsub",
 		Audience:  "gotest",
@@ -114,7 +113,7 @@ func TestJwt_ExpiredKey(t *testing.T) {
 		IssuedAt:  twoMonthAgo.Unix(),
 	}
 
-	expiredKey, err := tok.GenerateTokenForClaims(claims)
+	expiredKey, err := tok.generateTokenForClaims(claims)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, expiredKey)
@@ -131,7 +130,7 @@ func TestJwt_NotBeforeInFuture(t *testing.T) {
 	oneMonthFromNow := now.AddDate(0, 1, 0)
 	twoMonthsFromNow := now.AddDate(0, 2, 0)
 
-	claims := token.JwtClaims{
+	claims := JwtClaims{
 		Issuer:    "tests",
 		Subject:   "testsub",
 		Audience:  "gotest",
@@ -140,7 +139,7 @@ func TestJwt_NotBeforeInFuture(t *testing.T) {
 		IssuedAt:  now.Unix(),
 	}
 
-	expiredKey, err := tok.GenerateTokenForClaims(claims)
+	expiredKey, err := tok.generateTokenForClaims(claims)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, expiredKey)

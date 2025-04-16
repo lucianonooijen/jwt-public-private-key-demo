@@ -47,7 +47,7 @@ func (t *Token) GenerateJwt(subject, jwtId, name, role string) (string, error) {
 		Role:      role,
 	}
 
-	tok, err := t.GenerateTokenForClaims(claims)
+	tok, err := t.generateTokenForClaims(claims)
 	if err != nil {
 		return "", fmt.Errorf("error signing token: %w", err)
 	}
@@ -57,10 +57,10 @@ func (t *Token) GenerateJwt(subject, jwtId, name, role string) (string, error) {
 	return tok, nil
 }
 
-// GenerateTokenForClaims is a function that will sign the JwtClaims passed in.
-// WARNING: This method should only be used by this module itself and tests for this module.
+// generateTokenForClaims is a function that will sign the JwtClaims passed in.
+// WARNING: This method should only be called in public wrapper functions and not exposed directly.
 // For generating tokens in production code, always use the audience-specific methods.
-func (t *Token) GenerateTokenForClaims(claims JwtClaims) (string, error) { //nolint:gocritic // Jose needs val, not ref
+func (t *Token) generateTokenForClaims(claims JwtClaims) (string, error) { //nolint:gocritic // Jose needs val, not ref
 	return jwt.Signed(*t.signer).Claims(claims).Serialize()
 }
 
